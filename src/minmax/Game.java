@@ -78,40 +78,35 @@ public class Game {
 
 		int len = game_board.length;
 		char[][] temp_board;
-		
+
 		Tree mmTree = new Tree(node.getBoard());
 		for (int j = 0; j < game_board.length; ++j) {
-			Tree child = null;
 			temp_board = new char[len][len];
 			for (int i = 0; i < game_board.length; i++) {
+				Tree child = null;
 				if (node.getBoard()[j][i] == ' ') {
 					System.arraycopy(node.getBoard(), 0, temp_board, 0, len);
 					temp_board[j][i] = getPlayer(turn);
 
 					child = new Tree(temp_board);
 					int value = assignValue(temp_board);
-
-					if (isPlayableBoard(temp_board) && value == 0) {
-						System.out.println("is playable:");
-						printBoard(temp_board);
-						child.insertNode(new Tree(playPossibleMoves(child, changeTurn(turn))));
-						System.out.println("Current node length:" + child.getNodeLength());
-					}
-					if(value != 0)
-					{
-						child.setValue(value);
-					}
-					
-					printBoard(temp_board);
-					System.out.println("");
+					child.setValue(value);
+				}
+				if (child != null) {
+					System.out.println("mmTree sai noden");
+					mmTree.insertNode(child);
 				}
 			}
-			if (child != null) {
-				mmTree.insertNode(child);
+		}
+		System.out.println("getnodes size:" + mmTree.getNodes().size());
+		for (Tree child : mmTree.getNodes()) {
+			System.out.println("?!?!");
+			printBoard(child.getBoard());
+			if (isPlayableBoard(child.getBoard())) {
+				child = playPossibleMoves(child, changeTurn(turn));
+				System.out.println("childnode: " + child.getTreeSize());
 			}
 		}
-
-		System.out.println("kävin täällä");
 		return mmTree;
 	}
 
@@ -136,7 +131,7 @@ public class Game {
 	}
 
 	int assignValue(char[][] board) {
-		
+
 		// VAAKA
 		for (char[] row : board) {
 			char tmp = row[0];

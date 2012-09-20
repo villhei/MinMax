@@ -37,7 +37,7 @@ public class Tree {
 	}
 
 	public void insertNode(Tree node) {
-		nodes.add(node);
+		nodes.add(new Tree(node));
 	}
 	
 	public int getNodeLength()
@@ -62,6 +62,11 @@ public class Tree {
 	public char[][] getBoard()
 	{
 		return this.board;
+	}
+	
+	public ArrayList<Tree> getNodes()
+	{
+		return this.nodes;
 	}
 
 	public Tree maxNode() {
