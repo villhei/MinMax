@@ -17,11 +17,18 @@ public class Tree {
 	private ArrayList<Tree> nodes;
 
 	public Tree(char[][] board) {
-		this.board = board;
+		int len = board.length;
+		this.board = new char[len][len];
+		System.arraycopy(board, 0, this.board, 0, len);
 		this.nodes = new ArrayList();
 	}
 
 	public Tree() {
+	}
+	
+	public Tree(Tree tree)
+	{
+		this(tree.getBoard());
 	}
 
 	public int getValue() {
@@ -41,6 +48,7 @@ public class Tree {
 	public int getTreeSize()
 	{
 		int size = 1;
+		System.out.println("Children: " + nodes.size());
 		if(nodes!=null)
 		{
 			for(Tree node : nodes)

@@ -80,8 +80,6 @@ public class Game {
 		char[][] temp_board;
 		
 		Tree mmTree = new Tree(node.getBoard());
-
-
 		for (int j = 0; j < game_board.length; ++j) {
 			Tree child = null;
 			temp_board = new char[len][len];
@@ -96,10 +94,10 @@ public class Game {
 					if (isPlayableBoard(temp_board) && value == 0) {
 						System.out.println("is playable:");
 						printBoard(temp_board);
-						child.insertNode(playPossibleMoves(child, changeTurn(turn)));
+						child.insertNode(new Tree(playPossibleMoves(child, changeTurn(turn))));
 						System.out.println("Current node length:" + child.getNodeLength());
 					}
-					if(value == 1 || value == -1)
+					if(value != 0)
 					{
 						child.setValue(value);
 					}
@@ -138,6 +136,8 @@ public class Game {
 	}
 
 	int assignValue(char[][] board) {
+		
+		// VAAKA
 		for (char[] row : board) {
 			char tmp = row[0];
 			for (int i = 0; i < row.length; ++i) {
@@ -153,10 +153,11 @@ public class Game {
 				}
 			}
 		}
+		// PYSTY
 		for (int j = 0; j < board.length; ++j) {
-			char tmp = board[j][0];
+			char tmp = board[0][j];
 			for (int i = 0; i < board.length; ++i) {
-				if (board[j][i] != tmp || tmp == ' ') {
+				if (board[i][j] != tmp || tmp == ' ') {
 					break;
 				}
 				if (i == board[j].length - 1) {
@@ -168,6 +169,7 @@ public class Game {
 				}
 			}
 		}
+		// KULMA
 		char tmp = board[0][0];
 		int len = board.length - 1;
 		for (int j = 0; j < board.length; ++j) {
@@ -182,6 +184,7 @@ public class Game {
 				}
 			}
 		}
+		// KULMA
 		tmp = board[len][0];
 		for (int j = 0; j < board.length; ++j) {
 			if (board[len - j][j] != tmp || tmp == ' ') {
