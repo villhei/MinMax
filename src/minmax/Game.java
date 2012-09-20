@@ -9,16 +9,16 @@ package minmax;
  * @author Ville Heikkinen
  */
 public class Game {
-	
+
 	char[][] game_board;
 	int turn;
 	Tree turnTree;
-	
+
 	public Game(char[][] board) {
 		this.game_board = board;
 		this.turn = 1;
 	}
-	
+
 	char getPlayer(int turn) {
 		if (turn == 1) {
 			return 'X';
@@ -26,7 +26,7 @@ public class Game {
 			return 'O';
 		}
 	}
-	
+
 	int changeTurn(int turn) {
 		if (turn == 1) {
 			return 0;
@@ -34,12 +34,14 @@ public class Game {
 			return 1;
 		}
 	}
-	
+
 	boolean isAiPlayer(char player) {
 		return true;
 	}
-	
+
 	void playGame() {
+		System.out.println("peli käynnisty");
+		printBoard(turnTree.getBoard());
 		while (isPlayableBoard(turnTree.getBoard())) {
 			if (isAiPlayer(this.getPlayer(turn))) {
 				printCurrentBoard();
@@ -49,7 +51,7 @@ public class Game {
 			}
 		}
 	}
-	
+
 	void printBoard(char[][] board) {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
@@ -58,68 +60,72 @@ public class Game {
 			System.out.println();
 		}
 	}
-	
+
 	void printCurrentBoard() {
 		printBoard(turnTree.getBoard());
 	}
-	
+
 	void buildGameTree() {
 		Tree tree = new Tree(game_board);
 		printBoard(tree.getBoard());
 		System.out.println("rakennan");
-		this.turnTree = playPossibleMoves(tree, turn);
-		tree.getTreeSize();
+		tree = playPossibleMoves(tree, turn);
+		System.out.println("puun koko:  " + tree.getTreeSize());
+		this.turnTree = tree;
 	}
-	
+
 	Tree playPossibleMoves(Tree node, int turn) {
-		Tree mmTree = new Tree(node.getBoard());
-		mmTree.setValue(assignValue(node.getBoard()));
-		
+
 		int len = game_board.length;
-		char[][] temp_board = new char[len][len];
+		char[][] temp_board;
 		
-		
+		Tree mmTree = new Tree(node.getBoard());
+
+
 		for (int j = 0; j < game_board.length; ++j) {
 			Tree child = null;
+			temp_board = new char[len][len];
 			for (int i = 0; i < game_board.length; i++) {
 				if (node.getBoard()[j][i] == ' ') {
 					System.arraycopy(node.getBoard(), 0, temp_board, 0, len);
 					temp_board[j][i] = getPlayer(turn);
-					
+
 					child = new Tree(temp_board);
 					int value = assignValue(temp_board);
-					System.out.println("assigned value " + value);
-					printBoard(temp_board);
-					child.setValue(value);
-					
+
 					if (isPlayableBoard(temp_board) && value == 0) {
 						System.out.println("is playable:");
 						printBoard(temp_board);
 						child.insertNode(playPossibleMoves(child, changeTurn(turn)));
+						System.out.println("Current node length:" + child.getNodeLength());
 					}
-					System.out.println("value got: " + child.getValue());
+					if(value == 1 || value == -1)
+					{
+						child.setValue(value);
+					}
+					
 					printBoard(temp_board);
 					System.out.println("");
 				}
 			}
 			if (child != null) {
 				mmTree.insertNode(child);
-				mmTree.updateValue();
 			}
 		}
+
 		System.out.println("kävin täällä");
 		return mmTree;
 	}
-	
+
 	Tree getBestMove(Tree tree, int turn) {
 		if (this.getPlayer(turn) == 'X') {
 			return tree.maxNode();
 		} else {
 			return tree.minNode();
 		}
-		
+
 	}
-	
+
 	boolean isPlayableBoard(char[][] board) {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
@@ -130,7 +136,7 @@ public class Game {
 		}
 		return false;
 	}
-	
+
 	int assignValue(char[][] board) {
 		for (char[] row : board) {
 			char tmp = row[0];

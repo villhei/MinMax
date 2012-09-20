@@ -57,7 +57,7 @@ public class Tree {
 	}
 
 	public Tree maxNode() {
-		Tree maxValue = new Tree(board);
+		Tree maxValue = nodes.get(0);
 		for (Tree node : nodes) {
 			if (node.getValue() >= maxValue.getValue()) {
 				maxValue = node;
@@ -67,7 +67,7 @@ public class Tree {
 	}
 
 	public Tree minNode() {
-		Tree minValue = new Tree();
+		Tree minValue = nodes.get(0);
 		for (Tree node : nodes) {
 			if (node.getValue() <= minValue.getValue()) {
 				minValue = node;
